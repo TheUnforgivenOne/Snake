@@ -12,3 +12,5 @@ export enum Direction {
 }
 
 export type BodyPosition = [row: number, col: number];
+
+export type Listener = () => void;

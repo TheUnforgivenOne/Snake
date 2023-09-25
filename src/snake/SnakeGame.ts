@@ -1,32 +1,29 @@
-import { Direction } from './types';
+import { CellType, Direction } from './types';
 import Board from './entities/Board';
 import Snake from './entities/Snake';
 
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
 class SnakeGame {
   gameOver: boolean = false;
-  board: Board;
-  snake: Snake;
+  private board: Board;
+  private snake: Snake;
+  private updateFn: () => void;
 
-  constructor(rows: number = 25, cols: number = 25) {
+  constructor(updateFn: () => void, rows: number = 25, cols: number = 25) {
+    this.board = new Board(rows, cols);
     this.snake = new Snake(rows, cols);
-    this.board = new Board(rows, cols, this.snake);
+    this.updateFn = updateFn;
+
+    this.board.renderSnake(this.snake.getBodyPositions());
   }
 
   getBoard() {
     return this.board.getBoard();
   }
 
-  getStringBoard() {
-    return this.board
-      .getBoard()
-      .flat()
-      .map((cell) => cell.getCellType())
-      .join('');
-  }
-
   bindKeys() {
     const handleArrowPressed = (e: KeyboardEvent) => {
-      console.log(e);
       switch (e.code) {
         case 'ArrowUp':
           this.snake.setDirection(Direction.UP);
@@ -46,18 +43,41 @@ class SnakeGame {
     document.addEventListener('keydown', handleArrowPressed);
   }
 
-  async startGame(setState: any) {
-    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+  async startGame(tickMs: number = 200) {
     this.bindKeys();
+    this.board.placeFood();
     while (!this.gameOver) {
-      this.gameOver = this.board.tick();
-      await sleep(200);
-      setState((p: any) => p + 1);
+      this.nextTick();
+      await sleep(tickMs);
     }
   }
 
   endGame() {
     this.gameOver = true;
+  }
+
+  private nextTick() {
+    const nextPosition = this.snake.nextPosition();
+
+    // Check if snake bites itself
+    if (this.snake.isIntercept(nextPosition)) {
+      this.gameOver = true;
+      return;
+    }
+
+    if (this.board.isFoodEaten(nextPosition)) {
+      this.board.placeFood();
+    } else {
+      const removedPosition = this.snake.removeLastPosition();
+      if (removedPosition) {
+        const [row, col] = removedPosition;
+        this.board.setCellType(row, col, CellType.EMPTY);
+      }
+    }
+
+    this.snake.addNewPosition(nextPosition);
+    this.board.renderSnake(this.snake.getBodyPositions());
+    this.updateFn();
   }
 }
 
