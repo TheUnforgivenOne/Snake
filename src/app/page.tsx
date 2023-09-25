@@ -1,63 +1,25 @@
 'use client';
-import { Board } from '@/snake/Snake';
+import { FC, useMemo, useState } from 'react';
 import styles from './page.module.css';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Direction } from '@/snake/types';
+import SnakeGame from '@/snake/SnakeGame';
 
 const Home = () => {
-  const [moves, setMoves] = useState(0);
-  const intervalId = useRef<NodeJS.Timeout | undefined>();
-  const snakeGame = useMemo(() => new Board(25, 25), []);
-
-  useEffect(() => {
-    if (snakeGame) {
-      console.log(snakeGame);
-      const handleArrowPressed = (e: KeyboardEvent) => {
-        switch (e.code) {
-          case 'ArrowUp':
-            snakeGame.snake.setDirection(Direction.UP);
-            return;
-          case 'ArrowRight':
-            snakeGame.snake.setDirection(Direction.RIGHT);
-            return;
-          case 'ArrowDown':
-            snakeGame.snake.setDirection(Direction.DOWN);
-            return;
-          case 'ArrowLeft':
-            snakeGame.snake.setDirection(Direction.LEFT);
-            return;
-          default:
-        }
-      };
-      document.addEventListener('keydown', handleArrowPressed);
-    }
-  }, [snakeGame]);
+  const snakeGame = useMemo(() => new SnakeGame(5, 5), []);
+  const [, setState] = useState(0);
 
   return (
     <main className={styles.main}>
-      {!snakeGame
-        ? 'load'
-        : snakeGame.board.map((row, index) => (
-            <div key={index} style={{ display: 'flex', gap: '8px' }}>
-              {row.map((cell, index) => (
-                <div key={`${index}_${cell.cellType}`} style={{ width: '8px' }}>
-                  {cell.cellType}
-                </div>
-              ))}
+      {snakeGame.getBoard().map((row: any, index: any) => (
+        <div key={index} style={{ display: 'flex', gap: '8px' }}>
+          {row.map((cell: any, index: any) => (
+            <div key={`${index}_${cell.cellType}`} style={{ width: '8px' }}>
+              {cell.cellType}
             </div>
           ))}
-      <button
-        onClick={() => {
-          intervalId.current = setInterval(() => {
-            setMoves((m) => m + 1);
-            snakeGame.move();
-          }, 200);
-        }}
-      >
-        start
-      </button>
-      <button onClick={() => clearInterval(intervalId.current)}>stop</button>
-      {snakeGame.snake.direction}
+        </div>
+      ))}
+      <button onClick={() => snakeGame.startGame(setState)}>start</button>
+      <button onClick={() => snakeGame.endGame()}>stop</button>
     </main>
   );
 };
