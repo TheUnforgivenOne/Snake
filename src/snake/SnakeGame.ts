@@ -22,6 +22,10 @@ class SnakeGame {
     return this.board.getBoard();
   }
 
+  getSnakeLength() {
+    return this.snake.getBodyPositions().length;
+  }
+
   bindKeys() {
     const handleArrowPressed = (e: KeyboardEvent) => {
       switch (e.code) {
@@ -46,8 +50,10 @@ class SnakeGame {
   async startGame(tickMs: number = 200) {
     this.bindKeys();
     this.board.placeFood();
+
     while (!this.gameOver) {
       this.nextTick();
+      this.updateFn();
       await sleep(tickMs);
     }
   }
@@ -77,7 +83,6 @@ class SnakeGame {
 
     this.snake.addNewPosition(nextPosition);
     this.board.renderSnake(this.snake.getBodyPositions());
-    this.updateFn();
   }
 }
 
