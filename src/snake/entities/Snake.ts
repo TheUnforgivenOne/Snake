@@ -1,31 +1,5 @@
 import { BodyPosition, Direction } from '../types';
-
-type PositionDiff = {
-  row: number;
-  col: number;
-};
-type PositionDiffDictionary = {
-  [key in Direction]: PositionDiff;
-};
-
-const positionDiffsDictionary: PositionDiffDictionary = {
-  [Direction.UP]: {
-    row: -1,
-    col: 0,
-  },
-  [Direction.RIGHT]: {
-    row: 0,
-    col: 1,
-  },
-  [Direction.DOWN]: {
-    row: 1,
-    col: 0,
-  },
-  [Direction.LEFT]: {
-    row: 0,
-    col: -1,
-  },
-};
+import { positionByDirectionDictionary } from '../constants';
 
 class Snake {
   private rows: number;
@@ -87,7 +61,7 @@ class Snake {
   }
 
   nextPosition() {
-    const positionDiffs = positionDiffsDictionary[this.direction];
+    const positionDiffs = positionByDirectionDictionary[this.direction];
 
     const headPosition = this.bodyPositions[this.bodyPositions.length - 1];
     const [row, col] = headPosition;

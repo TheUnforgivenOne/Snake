@@ -1,11 +1,13 @@
 import { CellType, Direction } from './types';
 import Board from './entities/Board';
 import Snake from './entities/Snake';
+import { positionByDirectionDictionary } from './constants';
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 class SnakeGame {
   gameOver: boolean = false;
+  countDown: number = 3;
   private board: Board;
   private snake: Snake;
   private updateFn: () => void;
@@ -47,10 +49,19 @@ class SnakeGame {
     document.addEventListener('keydown', handleArrowPressed);
   }
 
-  async startGame(tickMs: number = 200) {
+  async startCountDown() {
+    while (this.countDown !== 0) {
+      this.countDown -= 1;
+      this.updateFn();
+      await sleep(1000);
+    }
+
     this.bindKeys();
     this.board.placeFood();
+    this.startGame();
+  }
 
+  async startGame(tickMs: number = 200) {
     while (!this.gameOver) {
       this.nextTick();
       this.updateFn();
@@ -60,6 +71,7 @@ class SnakeGame {
 
   endGame() {
     this.gameOver = true;
+    this.updateFn();
   }
 
   private nextTick() {
@@ -81,6 +93,9 @@ class SnakeGame {
       }
     }
 
+    const cellRotation =
+      positionByDirectionDictionary[this.snake.getDirection()].rotate;
+    this.board.setCellRotation(nextPosition[0], nextPosition[1], cellRotation);
     this.snake.addNewPosition(nextPosition);
     this.board.renderSnake(this.snake.getBodyPositions());
   }

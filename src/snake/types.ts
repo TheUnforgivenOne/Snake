@@ -1,6 +1,8 @@
 export enum CellType {
   EMPTY = '.',
-  SNAKE = '+',
+  SNAKE_HEAD = '+',
+  SNAKE_BODY = '|',
+  SNAKE_TAIL = '-',
   FOOD = 'x',
 }
 
@@ -13,4 +15,11 @@ export enum Direction {
 
 export type BodyPosition = [row: number, col: number];
 
-export type Listener = () => void;
+export type PositionByDirection = {
+  row: number;
+  col: number;
+  rotate: number;
+};
+export type PositionByDirectionDictionary = {
+  [key in Direction]: PositionByDirection;
+};

@@ -21,6 +21,10 @@ class Board {
     this.board[row][col].setCellType(cellType);
   }
 
+  setCellRotation(row: number, col: number, rotation: number = 0) {
+    this.board[row][col].setCellRotation(rotation);
+  }
+
   private initializeBoard() {
     this.board = Array.from({ length: this.rows }, () =>
       Array.from({ length: this.cols }, () => new Cell(CellType.EMPTY)),
@@ -28,9 +32,18 @@ class Board {
   }
 
   renderSnake(positions: BodyPosition[]) {
-    for (const position of positions) {
+    for (const [index, position] of positions.entries()) {
       const [row, col] = position;
-      this.board[row][col].setCellType(CellType.SNAKE);
+      let newCellType: CellType;
+      if (index === 0) {
+        newCellType = CellType.SNAKE_TAIL;
+      } else if (index === positions.length - 1) {
+        newCellType = CellType.SNAKE_HEAD;
+      } else {
+        newCellType = CellType.SNAKE_BODY;
+      }
+
+      this.board[row][col].setCellType(newCellType);
     }
   }
 
@@ -38,7 +51,11 @@ class Board {
     let row = Math.floor(Math.random() * this.rows);
     let col = Math.floor(Math.random() * this.cols);
 
-    while (this.board[row][col].getCellType() === CellType.SNAKE) {
+    while (
+      [CellType.SNAKE_HEAD, CellType.SNAKE_BODY, CellType.SNAKE_TAIL].includes(
+        this.board[row][col].getCellType(),
+      )
+    ) {
       row = Math.floor(Math.random() * this.rows);
       col = Math.floor(Math.random() * this.cols);
     }

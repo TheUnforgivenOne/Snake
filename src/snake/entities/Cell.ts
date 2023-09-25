@@ -2,6 +2,7 @@ import { CellType } from '../types';
 
 class Cell {
   private cellType: CellType = CellType.EMPTY;
+  private rotation: number = 0;
 
   constructor(cellType: CellType) {
     this.cellType = cellType;
@@ -13,6 +14,14 @@ class Cell {
 
   setCellType(newCellType: CellType) {
     this.cellType = newCellType;
+  }
+
+  getCellRotation() {
+    return this.rotation;
+  }
+
+  setCellRotation(rotation: number = 0) {
+    this.rotation = rotation;
   }
 }
 
