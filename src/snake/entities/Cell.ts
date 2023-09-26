@@ -8,19 +8,19 @@ class Cell {
     this.cellType = cellType;
   }
 
-  getCellType() {
+  getCellType(): CellType {
     return this.cellType;
   }
 
-  setCellType(newCellType: CellType) {
+  setCellType(newCellType: CellType): void {
     this.cellType = newCellType;
   }
 
-  getCellRotation() {
+  getCellRotation(): number {
     return this.rotation;
   }
 
-  setCellRotation(rotation: number = 0) {
+  setCellRotation(rotation: number): void {
     this.rotation = rotation;
   }
 }

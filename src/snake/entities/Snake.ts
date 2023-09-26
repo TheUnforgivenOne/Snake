@@ -13,28 +13,28 @@ class Snake {
     this.initializeSnake();
   }
 
-  getDirection() {
+  getDirection(): Direction {
     return this.direction;
   }
 
-  setDirection(newDirection: Direction) {
+  setDirection(newDirection: Direction): void {
     this.direction = newDirection;
   }
 
-  getBodyPositions() {
+  getBodyPositions(): Position[] {
     return this.bodyPositions;
   }
 
-  addNewPosition(newPosition: Position) {
+  addNewPosition(newPosition: Position): void {
     this.bodyPositions.push(newPosition);
   }
 
-  removeLastPosition() {
-    return this.bodyPositions.shift();
+  removeLastPosition(): Position {
+    return this.bodyPositions.shift()!;
   }
 
   // Place snake (length 3) vertically at the center of the board
-  private initializeSnake() {
+  private initializeSnake(): void {
     const centerBoardPosition = {
       row: Math.floor(this.rows / 2),
       col: Math.floor(this.cols / 2),
@@ -53,7 +53,7 @@ class Snake {
   private validateCoordinate(
     coordinate: number,
     coordinateType: 'col' | 'row',
-  ) {
+  ): number {
     const maxValue = coordinateType === 'col' ? this.cols : this.rows;
 
     if (coordinate < 0) return maxValue - 1;
@@ -61,7 +61,7 @@ class Snake {
     return coordinate;
   }
 
-  nextPosition() {
+  nextPosition(): Position {
     const positionDiff = positionByDirectionDictionary[this.direction];
     const headPosition = this.bodyPositions[this.bodyPositions.length - 1];
 
@@ -75,7 +75,7 @@ class Snake {
   }
 
   // Check if snake bites itself
-  isIntercept(position: Position) {
+  isIntercept(position: Position): boolean {
     return this.bodyPositions.some(
       ({ row, col }) => row === position.row && col === position.col,
     );

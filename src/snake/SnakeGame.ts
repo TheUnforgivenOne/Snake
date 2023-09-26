@@ -1,6 +1,7 @@
 import { CellType, Direction } from './types';
 import Board from './entities/Board';
 import Snake from './entities/Snake';
+import Cell from './entities/Cell';
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -20,15 +21,15 @@ class SnakeGame {
     this.startCountDown();
   }
 
-  getBoard() {
+  getBoard(): Cell[][] {
     return this.board.getBoard();
   }
 
-  getScore() {
+  getScore(): number {
     return this.snake.getBodyPositions().length - 3;
   }
 
-  bindKeys() {
+  bindKeys(): void {
     const handleArrowPressed = (e: KeyboardEvent) => {
       switch (e.code) {
         case 'ArrowUp':
@@ -49,7 +50,7 @@ class SnakeGame {
     document.addEventListener('keydown', handleArrowPressed);
   }
 
-  async startCountDown() {
+  async startCountDown(): Promise<void> {
     while (this.countDown !== 0) {
       this.countDown -= 1;
       this.rerender();
@@ -60,7 +61,7 @@ class SnakeGame {
     this.startGame();
   }
 
-  async startGame(tickMs: number = 20) {
+  async startGame(tickMs: number = 200): Promise<void> {
     this.bindKeys();
     while (!this.gameOver) {
       this.nextTick();
@@ -69,12 +70,12 @@ class SnakeGame {
     }
   }
 
-  endGame() {
+  endGame(): void {
     this.gameOver = true;
     this.rerender();
   }
 
-  private nextTick() {
+  private nextTick(): void {
     const nextPosition = this.snake.nextPosition();
 
     // Check if snake bites itself
@@ -87,10 +88,8 @@ class SnakeGame {
       this.board.placeFood();
     } else {
       const removedPosition = this.snake.removeLastPosition();
-      if (removedPosition) {
-        this.board.setCellType(removedPosition, CellType.EMPTY);
-        this.board.setCellRotation(removedPosition, 0);
-      }
+      this.board.setCellType(removedPosition, CellType.EMPTY);
+      this.board.setCellRotation(removedPosition, 0);
     }
 
     this.snake.addNewPosition(nextPosition);
