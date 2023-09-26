@@ -1,13 +1,14 @@
+import React, { FC } from 'react';
+import Header from '../components/Header';
 import './globals.css';
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
-  );
-}
+const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => (
+  <html lang="en">
+    <body>
+      <Header />
+      <main>{children}</main>
+    </body>
+  </html>
+);
+
+export default RootLayout;

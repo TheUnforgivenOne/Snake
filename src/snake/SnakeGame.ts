@@ -60,7 +60,7 @@ class SnakeGame {
     this.startGame();
   }
 
-  async startGame(tickMs: number = 250) {
+  async startGame(tickMs: number = 20) {
     this.bindKeys();
     while (!this.gameOver) {
       this.nextTick();
