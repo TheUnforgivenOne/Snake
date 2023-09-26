@@ -7,12 +7,8 @@ import styles from './page.module.css';
 const Home = () => {
   // Function to force react component re-render on snake position change
   const [, forceUpdate] = useState(true);
-  const newGame = () => {
-    const updateFn = () => forceUpdate((prev) => !prev);
-    const game = new SnakeGame(updateFn, 10, 10);
-    game.startCountDown();
-    return game;
-  };
+  const rerender = () => forceUpdate((prev) => !prev);
+  const newGame = () => new SnakeGame(rerender, 10, 10);
 
   const [snakeGame, setSnakeGame] = useState(() => newGame());
 
@@ -52,7 +48,7 @@ const Home = () => {
             </div>
           ))}
         </div>
-        <div>Score: {snakeGame.getSnakeLength()}</div>
+        <div>Score: {snakeGame.getScore()}</div>
         <button onClick={() => snakeGame.startGame()}>start</button>
         <button onClick={() => snakeGame.endGame()}>end</button>
         {snakeGame.countDown > 0 && (
@@ -85,7 +81,7 @@ const Home = () => {
             }}
           >
             <h2>Game over</h2>
-            <div>Score: {snakeGame.getSnakeLength()}</div>
+            <div>Score: {snakeGame.getScore()}</div>
             <button onClick={resetGame}>Try again</button>
           </div>
         )}

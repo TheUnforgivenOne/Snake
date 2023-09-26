@@ -1,10 +1,10 @@
-import { BodyPosition, Direction } from '../types';
+import { Position, Direction } from '../types';
 import { positionByDirectionDictionary } from '../constants';
 
 class Snake {
   private rows: number;
   private cols: number;
-  private bodyPositions: BodyPosition[] = [];
+  private bodyPositions: Position[] = [];
   private direction: Direction = Direction.UP;
 
   constructor(rows: number, cols: number) {
@@ -25,7 +25,7 @@ class Snake {
     return this.bodyPositions;
   }
 
-  addNewPosition(newPosition: BodyPosition) {
+  addNewPosition(newPosition: Position) {
     this.bodyPositions.push(newPosition);
   }
 
@@ -41,10 +41,11 @@ class Snake {
     };
 
     [1, 0, -1].forEach((diff) => {
-      this.bodyPositions.push([
-        centerBoardPosition.row + diff,
-        centerBoardPosition.col,
-      ]);
+      this.bodyPositions.push({
+        row: centerBoardPosition.row + diff,
+        col: centerBoardPosition.col,
+        rotation: 0,
+      });
     });
   }
 
@@ -61,24 +62,22 @@ class Snake {
   }
 
   nextPosition() {
-    const positionDiffs = positionByDirectionDictionary[this.direction];
-
+    const positionDiff = positionByDirectionDictionary[this.direction];
     const headPosition = this.bodyPositions[this.bodyPositions.length - 1];
-    const [row, col] = headPosition;
 
-    const newPosition: BodyPosition = [
-      this.validateCoordinate(row + positionDiffs.row, 'row'),
-      this.validateCoordinate(col + positionDiffs.col, 'col'),
-    ];
+    const newPosition: Position = {
+      row: this.validateCoordinate(headPosition.row + positionDiff.row, 'row'),
+      col: this.validateCoordinate(headPosition.col + positionDiff.col, 'col'),
+      rotation: positionDiff.rotate,
+    };
 
     return newPosition;
   }
 
-  // Check if snake has crashed into itself
-  isIntercept(position: BodyPosition) {
-    const [checkedRow, checkedCol] = position;
+  // Check if snake bites itself
+  isIntercept(position: Position) {
     return this.bodyPositions.some(
-      ([row, col]) => row === checkedRow && col === checkedCol,
+      ({ row, col }) => row === position.row && col === position.col,
     );
   }
 }

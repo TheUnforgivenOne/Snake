@@ -13,7 +13,7 @@ export enum Direction {
   LEFT = 'left',
 }
 
-export type BodyPosition = [row: number, col: number];
+export type Position = { row: number; col: number; rotation: number };
 
 export type PositionByDirection = {
   row: number;

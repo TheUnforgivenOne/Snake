@@ -1,7 +1,6 @@
 import { CellType, Direction } from './types';
 import Board from './entities/Board';
 import Snake from './entities/Snake';
-import { positionByDirectionDictionary } from './constants';
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -10,22 +9,23 @@ class SnakeGame {
   countDown: number = 3;
   private board: Board;
   private snake: Snake;
-  private updateFn: () => void;
+  private rerender: () => void;
 
-  constructor(updateFn: () => void, rows: number = 25, cols: number = 25) {
+  constructor(rerender: () => void, rows: number = 25, cols: number = 25) {
     this.board = new Board(rows, cols);
     this.snake = new Snake(rows, cols);
-    this.updateFn = updateFn;
+    this.rerender = rerender;
 
     this.board.renderSnake(this.snake.getBodyPositions());
+    this.startCountDown();
   }
 
   getBoard() {
     return this.board.getBoard();
   }
 
-  getSnakeLength() {
-    return this.snake.getBodyPositions().length;
+  getScore() {
+    return this.snake.getBodyPositions().length - 3;
   }
 
   bindKeys() {
@@ -52,26 +52,26 @@ class SnakeGame {
   async startCountDown() {
     while (this.countDown !== 0) {
       this.countDown -= 1;
-      this.updateFn();
+      this.rerender();
       await sleep(1000);
     }
 
-    this.bindKeys();
     this.board.placeFood();
     this.startGame();
   }
 
-  async startGame(tickMs: number = 200) {
+  async startGame(tickMs: number = 250) {
+    this.bindKeys();
     while (!this.gameOver) {
       this.nextTick();
-      this.updateFn();
+      this.rerender();
       await sleep(tickMs);
     }
   }
 
   endGame() {
     this.gameOver = true;
-    this.updateFn();
+    this.rerender();
   }
 
   private nextTick() {
@@ -88,14 +88,11 @@ class SnakeGame {
     } else {
       const removedPosition = this.snake.removeLastPosition();
       if (removedPosition) {
-        const [row, col] = removedPosition;
-        this.board.setCellType(row, col, CellType.EMPTY);
+        this.board.setCellType(removedPosition, CellType.EMPTY);
+        this.board.setCellRotation(removedPosition, 0);
       }
     }
 
-    const cellRotation =
-      positionByDirectionDictionary[this.snake.getDirection()].rotate;
-    this.board.setCellRotation(nextPosition[0], nextPosition[1], cellRotation);
     this.snake.addNewPosition(nextPosition);
     this.board.renderSnake(this.snake.getBodyPositions());
   }

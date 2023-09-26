@@ -1,5 +1,5 @@
 import Cell from './Cell';
-import { BodyPosition, CellType } from '../types';
+import { Position, CellType } from '../types';
 
 class Board {
   private rows: number;
@@ -9,7 +9,6 @@ class Board {
   constructor(rows: number = 25, cols: number = 25) {
     this.rows = rows;
     this.cols = cols;
-
     this.initializeBoard();
   }
 
@@ -17,12 +16,20 @@ class Board {
     return this.board;
   }
 
-  setCellType(row: number, col: number, cellType: CellType) {
-    this.board[row][col].setCellType(cellType);
+  getCellType(position: Position) {
+    return this.board[position.row][position.col].getCellType();
   }
 
-  setCellRotation(row: number, col: number, rotation: number = 0) {
-    this.board[row][col].setCellRotation(rotation);
+  getCellRotation(position: Position) {
+    return this.board[position.row][position.col].getCellRotation();
+  }
+
+  setCellType(position: Position, cellType: CellType) {
+    this.board[position.row][position.col].setCellType(cellType);
+  }
+
+  setCellRotation(position: Position, rotation: number = 0) {
+    this.board[position.row][position.col].setCellRotation(rotation);
   }
 
   private initializeBoard() {
@@ -31,9 +38,8 @@ class Board {
     );
   }
 
-  renderSnake(positions: BodyPosition[]) {
+  renderSnake(positions: Position[]) {
     for (const [index, position] of positions.entries()) {
-      const [row, col] = position;
       let newCellType: CellType;
       if (index === 0) {
         newCellType = CellType.SNAKE_TAIL;
@@ -43,29 +49,32 @@ class Board {
         newCellType = CellType.SNAKE_BODY;
       }
 
-      this.board[row][col].setCellType(newCellType);
+      this.setCellType(position, newCellType);
+      this.setCellRotation(position, position.rotation);
     }
   }
 
   placeFood() {
-    let row = Math.floor(Math.random() * this.rows);
-    let col = Math.floor(Math.random() * this.cols);
+    const foodPosition: Position = {
+      row: Math.floor(Math.random() * this.rows),
+      col: Math.floor(Math.random() * this.cols),
+      rotation: 0,
+    };
 
     while (
       [CellType.SNAKE_HEAD, CellType.SNAKE_BODY, CellType.SNAKE_TAIL].includes(
-        this.board[row][col].getCellType(),
+        this.getCellType(foodPosition),
       )
     ) {
-      row = Math.floor(Math.random() * this.rows);
-      col = Math.floor(Math.random() * this.cols);
+      foodPosition.row = Math.floor(Math.random() * this.rows);
+      foodPosition.col = Math.floor(Math.random() * this.cols);
     }
 
-    this.board[row][col].setCellType(CellType.FOOD);
+    this.setCellType(foodPosition, CellType.FOOD);
   }
 
-  isFoodEaten(position: BodyPosition) {
-    const [row, col] = position;
-    return this.board[row][col].getCellType() === CellType.FOOD;
+  isFoodEaten(position: Position) {
+    return this.getCellType(position) === CellType.FOOD;
   }
 }
 
