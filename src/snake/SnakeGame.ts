@@ -88,6 +88,7 @@ class SnakeGame {
       this.board.placeFood();
     } else {
       const removedPosition = this.snake.removeLastPosition();
+
       this.board.setCellType(removedPosition, CellType.EMPTY);
       this.board.setCellRotation(removedPosition, 0);
     }
