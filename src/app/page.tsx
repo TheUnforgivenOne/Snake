@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import styles from './page.module.css';
 
 const Home = () => {
   return (
@@ -9,6 +8,9 @@ const Home = () => {
       <ul>
         <li>
           <Link href="/snake">Snake</Link>
+        </li>
+        <li>
+          <Link href="/core">Core playground</Link>
         </li>
       </ul>
     </div>
