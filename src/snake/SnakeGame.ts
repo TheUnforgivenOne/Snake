@@ -1,7 +1,8 @@
-import { CellType, Direction } from './types';
+import { Binds, CellType, Direction } from './types';
 import Board from './entities/Board';
 import Snake from './entities/Snake';
 import Cell from './entities/Cell';
+import Settings from './entities/Settings';
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -10,15 +11,22 @@ class SnakeGame {
   countDown: number = 3;
   private board: Board;
   private snake: Snake;
+  settings: Settings;
   private rerender: () => void;
 
-  constructor(rerender: () => void, rows: number = 25, cols: number = 25) {
+  constructor(
+    rerender: () => void,
+    rows: number = 25,
+    cols: number = 25,
+    binds?: Binds,
+  ) {
     this.board = new Board(rows, cols);
     this.snake = new Snake(rows, cols);
+    this.settings = new Settings(this.snake, binds);
     this.rerender = rerender;
 
     this.board.renderSnake(this.snake.getBodyPositions());
-    this.startCountDown();
+    // this.startCountDown();
   }
 
   getBoard(): Cell[][] {
@@ -27,27 +35,6 @@ class SnakeGame {
 
   getScore(): number {
     return this.snake.getBodyPositions().length - 3;
-  }
-
-  bindKeys(): void {
-    const handleArrowPressed = (e: KeyboardEvent) => {
-      switch (e.code) {
-        case 'ArrowUp':
-          this.snake.setDirection(Direction.UP);
-          return;
-        case 'ArrowRight':
-          this.snake.setDirection(Direction.RIGHT);
-          return;
-        case 'ArrowDown':
-          this.snake.setDirection(Direction.DOWN);
-          return;
-        case 'ArrowLeft':
-          this.snake.setDirection(Direction.LEFT);
-          return;
-        default:
-      }
-    };
-    document.addEventListener('keydown', handleArrowPressed);
   }
 
   async startCountDown(): Promise<void> {
@@ -62,7 +49,7 @@ class SnakeGame {
   }
 
   async startGame(tickMs: number = 200): Promise<void> {
-    this.bindKeys();
+    this.settings.bind();
     while (!this.gameOver) {
       this.nextTick();
       this.rerender();

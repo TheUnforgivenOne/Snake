@@ -1,3 +1,14 @@
+.layout {
+  display: grid;
+  grid-template-columns: 25% auto;
+}
+
+.utilitiesLayout {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .gameLayout {
   position: relative;
   display: flex;

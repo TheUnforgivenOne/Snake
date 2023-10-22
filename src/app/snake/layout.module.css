@@ -1,5 +1,5 @@
 .layout {
   display: grid;
-  grid-template-columns: 25% auto 25%;
+  grid-template-columns: auto 25%;
   gap: 32px;
 }
