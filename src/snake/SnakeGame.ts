@@ -1,4 +1,4 @@
-import { Binds, CellType, Direction } from './types';
+import { SnakeBinds, CellType } from './types';
 import Board from './entities/Board';
 import Snake from './entities/Snake';
 import Cell from './entities/Cell';
@@ -18,7 +18,7 @@ class SnakeGame {
     rerender: () => void,
     rows: number = 25,
     cols: number = 25,
-    binds?: Binds,
+    binds?: SnakeBinds,
   ) {
     this.board = new Board(rows, cols);
     this.snake = new Snake(rows, cols);

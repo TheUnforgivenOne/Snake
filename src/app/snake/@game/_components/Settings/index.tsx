@@ -1,19 +1,19 @@
-import { Binds } from '@/snake/types';
+import { SnakeBinds } from '@/snake/types';
 import { FC } from 'react';
 
 const Settings: FC<{
-  settings?: Binds;
-  onUpdate: (newSettings?: Binds) => void;
-}> = ({ settings, onUpdate }) => {
+  binds: SnakeBinds;
+  // onUpdate: (newSettings?: Binds) => void;
+}> = ({ binds }) => {
   return (
     <div>
       <h3>Settings</h3>
-      {settings && (
+      {binds && (
         <div>
-          <div>{settings.up}</div>
-          <div>{settings.right}</div>
-          <div>{settings.down}</div>
-          <div>{settings.left}</div>
+          <div>{binds.up}</div>
+          <div>{binds.right}</div>
+          <div>{binds.down}</div>
+          <div>{binds.left}</div>
           <button>Apply</button>
         </div>
       )}

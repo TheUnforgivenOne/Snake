@@ -24,4 +24,4 @@ export type PositionByDirectionDictionary = {
   [key in Direction]: PositionByDirection;
 };
 
-export type Binds = { [key in Direction]: string };
+export type SnakeBinds = { [key in Direction]: string };

@@ -1,29 +1,29 @@
-import { Binds, Direction } from '../types';
+import { SnakeBinds, Direction } from '../types';
 import Snake from './Snake';
 
-const defaultBinds = {
+export const defaultBinds = {
   [Direction.UP]: 'ArrowUp',
   [Direction.RIGHT]: 'ArrowRight',
   [Direction.DOWN]: 'ArrowDown',
   [Direction.LEFT]: 'ArrowLeft',
 };
 
-class Settings {
+class Binds {
   private snake: Snake;
-  private binds: Binds;
+  private binds: SnakeBinds;
   private handleArrowPressed: (e: KeyboardEvent) => void;
 
-  constructor(snake: Snake, binds: Binds = defaultBinds) {
+  constructor(snake: Snake, binds: SnakeBinds = defaultBinds) {
     this.snake = snake;
     this.binds = binds;
     this.handleArrowPressed = () => null;
   }
 
-  getSettings(): Binds {
+  getSettings(): SnakeBinds {
     return this.binds;
   }
 
-  setSettings(newBinds: Binds): void {
+  setSettings(newBinds: SnakeBinds): void {
     this.binds = newBinds;
   }
 
@@ -61,4 +61,4 @@ class Settings {
   }
 }
 
-export default Settings;
+export default Binds;

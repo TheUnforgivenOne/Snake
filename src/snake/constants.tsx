@@ -28,15 +28,15 @@ export const C_SIZE = '32';
 export const imagesDictionary = {
   [CellType.EMPTY]: ' ',
   [CellType.SNAKE_HEAD]: (
-    <Image src="/head.png" alt="head" width={C_SIZE} height={C_SIZE} />
+    <Image src="/snake/head.png" alt="head" width={C_SIZE} height={C_SIZE} />
   ),
   [CellType.SNAKE_BODY]: (
-    <Image src="/body.png" alt="body" width={C_SIZE} height={C_SIZE} />
+    <Image src="/snake/body.png" alt="body" width={C_SIZE} height={C_SIZE} />
   ),
   [CellType.SNAKE_TAIL]: (
-    <Image src="/tail.png" alt="tail" width={C_SIZE} height={C_SIZE} />
+    <Image src="/snake/tail.png" alt="tail" width={C_SIZE} height={C_SIZE} />
   ),
   [CellType.FOOD]: (
-    <Image src="/food.png" alt="food" width={C_SIZE} height={C_SIZE} />
+    <Image src="/snake/food.png" alt="food" width={C_SIZE} height={C_SIZE} />
   ),
 };
