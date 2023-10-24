@@ -1,7 +1,7 @@
 import { SnakeBinds, Direction } from '../types';
 import Snake from './Snake';
 
-export const defaultBinds = {
+const defaultBinds = {
   [Direction.UP]: 'ArrowUp',
   [Direction.RIGHT]: 'ArrowRight',
   [Direction.DOWN]: 'ArrowDown',
@@ -11,12 +11,12 @@ export const defaultBinds = {
 class Binds {
   private snake: Snake;
   private binds: SnakeBinds;
-  private handleArrowPressed: (e: KeyboardEvent) => void;
+  private handleArrowPressed: ((e: KeyboardEvent) => void) | null;
 
   constructor(snake: Snake, binds: SnakeBinds = defaultBinds) {
     this.snake = snake;
     this.binds = binds;
-    this.handleArrowPressed = () => null;
+    this.handleArrowPressed = null;
   }
 
   getSettings(): SnakeBinds {
@@ -57,7 +57,9 @@ class Binds {
   }
 
   unbind(): void {
-    document.removeEventListener('keydown', this.handleArrowPressed);
+    if (this.handleArrowPressed) {
+      document.removeEventListener('keydown', this.handleArrowPressed);
+    }
   }
 }
 

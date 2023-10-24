@@ -3,11 +3,13 @@ import Info from './_components/Info';
 import Settings from './_components/Settings';
 import Game from './_components/Game';
 
-import { defaultBinds } from '@/snake/entities/Settings';
 import classes from './page.module.css';
 
 const getSettings = async () => {
-  return await Promise.resolve(defaultBinds);
+  const res = await fetch('http://localhost:3000/api/snake/settings').then(
+    (res) => res.json(),
+  );
+  return res.data;
 };
 
 const SnakePage: FC = async () => {

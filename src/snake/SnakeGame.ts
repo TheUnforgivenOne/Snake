@@ -26,7 +26,7 @@ class SnakeGame {
     this.rerender = rerender;
 
     this.board.renderSnake(this.snake.getBodyPositions());
-    // this.startCountDown();
+    this.startCountDown();
   }
 
   getBoard(): Cell[][] {
